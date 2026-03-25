@@ -1,6 +1,5 @@
 using CloudGame.Application.Handlers.Auth.Login;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using System.Text;
@@ -43,29 +42,20 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1"
     });
 
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    options.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
         Description = "Enter JWT token like: Bearer {your token}",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.Http,
-        Scheme = "bearer",
+        Scheme = "Bearer",
         BearerFormat = "JWT"
     });
 
-    //options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    //        {
-    //            {
-    //                new OpenApiSecurityScheme()
-    //                {
-    //                    Reference = new (){ Type = ReferenceType.SecurityScheme, Id = "Bearer" },
-    //                    Scheme = "oauth2",
-    //                    Name = "Bearer",
-    //                    In = ParameterLocation.Header
-    //                },
-    //                new List<string>()
-    //            }
-    //        });
+    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+    {
+        [new OpenApiSecuritySchemeReference("bearer", document)] = []
+    });    
 });
 
 var app = builder.Build();
