@@ -7,8 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Contracts\IUserReadOnlyRepository.cs~RF62f91ad.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Entities\" />
-    <Folder Include="Contracts\" />
   </ItemGroup>
 
 </Project>

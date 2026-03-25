@@ -7,10 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Dapper\DapperContext.cs~RF6389bf2.TMP" />
+    <None Remove="Dapper\Repositories\UserRepository.cs~RF63b155e.TMP" />
+    <None Remove="Dapper\Repositories\UserRepository.cs~RF64129c4.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="SqlServer\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.72" />
+    <PackageReference Include="Dapper.Contrib" Version="2.0.78" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.5" />
 	<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.5" />
   </ItemGroup>
