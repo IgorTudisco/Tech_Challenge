@@ -1,7 +1,6 @@
 ﻿using CloudGame.Application.Handlers.Auth.Login;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading;
 
 namespace CloudGame.API.Controllers;
 
