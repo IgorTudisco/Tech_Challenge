@@ -12,10 +12,10 @@ public class LoginHandler : IHandler<LoginCommand, LoginResponse>
     {
         Claim[] claims = [
              new(ClaimTypes.Name, "nome do usuario"),
-             new("Role", "admin"),
+             new(ClaimTypes.Role, "admin"),
         ];
 
-        var key = Encoding.ASCII.GetBytes("chavesecreta");
+        var key = Encoding.ASCII.GetBytes("chavesecretachavesecretachavesecretachavesecretachavesecretachavesecreta");
         var expirationDate = DateTime.UtcNow.AddHours(1);
 
         var tokenDescriptor = new SecurityTokenDescriptor
