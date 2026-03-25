@@ -6,18 +6,20 @@ public class Game : Entity<int>
     public string? Description { get; set; }
     public string? ImageUrl { get; set; }
     public decimal? Price { get; set; }
-    public DateTime ReleaseDate { get; set; }
     public string? Genre { get; set; }
+    public DateTime ReleaseDate { get; set; }
     public DateTime RegisterAt { get; set; } = DateTime.UtcNow;
 
 
-    public Game(string name, string description, string imageUrl, decimal price, DateTime releaseDate)
+    public Game(string name, string description, string imageUrl, decimal price, string genre, DateTime releaseDate, DateTime registerAt)
     {
         Name = name;
         Description = description;
         ImageUrl = imageUrl;
         Price = price;
+        Genre = genre;
         ReleaseDate = releaseDate;
+        RegisterAt = registerAt;
         Validate();
     }
 
