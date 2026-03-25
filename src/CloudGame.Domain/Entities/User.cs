@@ -4,23 +4,24 @@ namespace CloudGame.Domain.Entities;
 
 public sealed class User:Entity<int>
 {
-    public User(string nome, string email, string password, DateTime birthDate)
+    public User(string name, string email, string password, DateTime birthDate)
     {
-        Nome = nome;
+        Name = name;
         Email = email;
         SetPassword(password);
         BirthDate = birthDate;
+        Active = true;
     }
 
-    public string Name{get;}
+    public string Name{ get; private set; }
 
-    public string Email{get;}
+    public string Email{get; private set; }
 
-    public string Password{get;}
+    public string Password{get; private set; }
 
-    public DateTime BirthDate{get;}
+    public DateTime BirthDate{get; private set; }
 
-    public bool Active{get;}
+    public bool Active{get; private set; }
 
     public void SetActive(bool active){
         Active = active;
