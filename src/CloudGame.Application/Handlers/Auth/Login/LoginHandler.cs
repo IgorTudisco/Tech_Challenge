@@ -1,10 +1,8 @@
 ﻿using CloudGame.Domain.Handlers;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Threading;
 
 namespace CloudGame.Application.Handlers.Auth.Login;
 
@@ -14,9 +12,10 @@ public class LoginHandler : IHandler<LoginCommand, LoginResponse>
     {
         Claim[] claims = [
              new(ClaimTypes.Name, "nome do usuario"),
+             new(ClaimTypes.Role, "admin"),
         ];
 
-        var key = Encoding.ASCII.GetBytes("chavesecreta");
+        var key = Encoding.ASCII.GetBytes("chavesecretachavesecretachavesecretachavesecretachavesecretachavesecreta");
         var expirationDate = DateTime.UtcNow.AddHours(1);
 
         var tokenDescriptor = new SecurityTokenDescriptor
@@ -34,7 +33,7 @@ public class LoginHandler : IHandler<LoginCommand, LoginResponse>
 
         return new()
         {
-            Token = tokenHandler.CreateToken(tokenDescriptor),
+            Token = tokenHandler.WriteToken(securityToken),
             ExpirationDate = expirationDate,
         };
     }

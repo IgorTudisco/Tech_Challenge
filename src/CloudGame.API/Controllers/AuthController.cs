@@ -13,11 +13,19 @@ public class AuthController : Controller
     [HttpPost]
     [Route("Login")]
     public async Task<IActionResult> Login(
-        [FromBody] LoginCommand command, 
+        [FromBody] LoginCommand command,
         [FromServices] LoginHandler handler,
         CancellationToken cancellationToken)
     {
         var loginResult = await handler.HandleAsync(command, cancellationToken);
         return Ok(loginResult);
+    }
+
+    [HttpPost]
+    [Route("testeauth")]
+    [Authorize(Roles = "admin")]
+    public async Task<IActionResult> Teste()
+    {
+        return Ok();
     }
 }
