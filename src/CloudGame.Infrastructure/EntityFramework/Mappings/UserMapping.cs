@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CloudGame.Infrastructure.EntityFramework.Mappings
-{   
+{
 
     public sealed class UserMapping : IEntityTypeConfiguration<User>
     {
@@ -14,7 +14,7 @@ namespace CloudGame.Infrastructure.EntityFramework.Mappings
             builder.Property(p => p.Name).IsRequired().HasColumnType("VARCHAR(120)");
             builder.Property(p => p.Email).IsRequired().HasColumnType("VARCHAR(120)");
             builder.Property(p => p.Password).IsRequired().HasColumnType("VARCHAR(250)");
-            builder.Property(p => p.BirthDate).HasColumnType("DATETIME2");            
+            builder.Property(p => p.BirthDate).HasColumnType("DATETIME2");
             builder.Property(p => p.Active).HasColumnType("BIT");
         }
     }

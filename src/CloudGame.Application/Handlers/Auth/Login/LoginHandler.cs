@@ -1,4 +1,6 @@
-﻿using CloudGame.Domain.Handlers;
+﻿using CloudGame.Application.Settings;
+using CloudGame.Domain.Handlers;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -6,7 +8,7 @@ using System.Text;
 
 namespace CloudGame.Application.Handlers.Auth.Login;
 
-public class LoginHandler : IHandler<LoginCommand, LoginResponse>
+public class LoginHandler(IOptions<JwtSettings> jwtSettingsOption) : IHandler<LoginCommand, LoginResponse>
 {
     public async Task<LoginResponse> HandleAsync(LoginCommand command, CancellationToken cancellationToken)
     {
@@ -15,17 +17,17 @@ public class LoginHandler : IHandler<LoginCommand, LoginResponse>
              new(ClaimTypes.Role, "admin"),
         ];
 
-        var key = Encoding.ASCII.GetBytes("chavesecretachavesecretachavesecretachavesecretachavesecretachavesecreta");
-        var expirationDate = DateTime.UtcNow.AddHours(1);
-
+        JwtSettings jwtSettings = jwtSettingsOption.Value;
+        var key = Encoding.ASCII.GetBytes(jwtSettings.EncriptKey);
+        var expirationDate = DateTime.UtcNow.AddMinutes(jwtSettings.ExpiresInMinutes);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
             Expires = expirationDate,
             SigningCredentials =
               new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512Signature),
-            Audience = "CloudGame",
-            Issuer = "CloudGame",
+            Audience = jwtSettings.Audience,
+            Issuer = jwtSettings.Issuer,
         };
 
         JwtSecurityTokenHandler tokenHandler = new();

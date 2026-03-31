@@ -1,4 +1,5 @@
 ﻿using CloudGame.Application.Handlers.Auth.Login;
+using CloudGame.Domain.Handlers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +15,7 @@ public class AuthController : Controller
     [Route("Login")]
     public async Task<IActionResult> Login(
         [FromBody] LoginCommand command,
-        [FromServices] LoginHandler handler,
+        [FromServices] IHandler<LoginCommand, LoginResponse> handler,
         CancellationToken cancellationToken)
     {
         var loginResult = await handler.HandleAsync(command, cancellationToken);
