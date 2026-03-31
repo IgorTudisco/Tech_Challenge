@@ -1,8 +1,8 @@
-﻿using CloudGame.Domain.Contracts;
-using CloudGame.Domain.Entities;
+﻿using CloudGame.Domain.Entities;
 using CloudGame.Infrastructure.Dapper.Contracts;
 using System.Data;
 using Dapper.Contrib.Extensions;
+using CloudGame.Domain.Interfaces;
 
 namespace CloudGame.Infrastructure.Dapper.Repositories
 {

@@ -1,5 +1,5 @@
-﻿using CloudGame.Domain.Contracts;
-using CloudGame.Domain.Entities;
+﻿using CloudGame.Domain.Entities;
+using CloudGame.Domain.Interfaces;
 
 namespace CloudGame.Infrastructure.EntityFramework.Repositories
 {

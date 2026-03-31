@@ -1,5 +1,5 @@
-﻿using CloudGame.Domain.Contracts;
-using CloudGame.Domain.Entities;
+﻿using CloudGame.Domain.Entities;
+using CloudGame.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace CloudGame.Infrastructure.EntityFramework.Repositories;

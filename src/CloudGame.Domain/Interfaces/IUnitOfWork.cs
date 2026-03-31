@@ -1,6 +1,6 @@
 using System.Data;
 
-namespace CloudGame.Domain.Contracts;
+namespace CloudGame.Domain.Interfaces;
 
 public interface IUnitOfWork
 {

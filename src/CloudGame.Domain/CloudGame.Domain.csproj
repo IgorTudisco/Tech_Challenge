@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Contracts\IUserReadOnlyRepository.cs~RF62f91ad.TMP" />
+    <None Remove="Interfaces\IUserReadOnlyRepository.cs~RF62f91ad.TMP" />
+    <None Remove="Entities\Entity.cs~RF781a9dc.TMP" />
   </ItemGroup>
 
   <ItemGroup>

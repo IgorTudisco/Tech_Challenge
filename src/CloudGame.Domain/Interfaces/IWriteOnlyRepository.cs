@@ -1,6 +1,6 @@
 using CloudGame.Domain.Entities;
 
-namespace CloudGame.Domain.Contracts;
+namespace CloudGame.Domain.Interfaces;
 
 public interface IWriteOnlyRepository<in TEntity, in TId> where TEntity : Entity<TId>
 {
