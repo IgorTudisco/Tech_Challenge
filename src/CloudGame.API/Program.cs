@@ -1,4 +1,6 @@
 using CloudGame.Application.Handlers.Auth.Login;
+using CloudGame.Application.Settings;
+using CloudGame.Domain.Handlers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
@@ -6,12 +8,15 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
-var key = Encoding.ASCII.GetBytes("chavesecretachavesecretachavesecretachavesecretachavesecretachavesecreta");
+builder.Services.AddScoped<IHandler<LoginCommand, LoginResponse>, LoginHandler>();
+var jwtSettingsSection = builder.Configuration.GetRequiredSection("JwtSettings");
+builder.Services.Configure<JwtSettings>(jwtSettingsSection);
+
+var encriptKey = jwtSettingsSection.GetValue<string>("EncriptKey")!;
+var key = Encoding.ASCII.GetBytes(encriptKey);
 builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -55,7 +60,7 @@ builder.Services.AddSwaggerGen(options =>
     options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
     {
         [new OpenApiSecuritySchemeReference("bearer", document)] = []
-    });    
+    });
 });
 
 var app = builder.Build();

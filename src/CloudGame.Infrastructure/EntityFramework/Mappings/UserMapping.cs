@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CloudGame.Infrastructure.EntityFramework.Mappings
-{   
+{
 
     public sealed class UserMapping : IEntityTypeConfiguration<User>
     {
