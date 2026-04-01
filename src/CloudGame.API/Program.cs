@@ -1,5 +1,6 @@
 using CloudGame.Application.Handlers.Auth.Login;
 using CloudGame.Application.Settings;
+using CloudGame.Domain.Entities;
 using CloudGame.Domain.Handlers;
 using CloudGame.Infrastructure.EntityFramework;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -37,8 +38,12 @@ builder.Services.AddAuthentication(options =>
                     ValidateAudience = false
                 };
             });
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(
-                                            builder.Configuration.GetConnectionString("Default")));
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer
+    (
+        builder.Configuration.GetConnectionString("Default")
+    )    
+);
 
 builder.Services.AddScoped<LoginHandler>();
 

@@ -23,7 +23,7 @@ public sealed class User : Entity<int>
     public bool Active { get; private set; }
 
     public DateTime? UpdateAt { get; private set; }
-    public bool IsAdmin { get; private set; }
+    public bool IsAdmin { get; private set; }    
 
     public void SetActive(bool active)
     {
@@ -43,4 +43,12 @@ public sealed class User : Entity<int>
         UpdateAt = DateTime.UtcNow;
     }
 
+    public static User CreatingUser()
+    {
+        var user = new User("admin", "admin@cloudgame.com", "admingame", new DateTime(2026, 3, 31), true)
+        {
+            CreatedAt = new DateTime(2026, 03, 31)
+        };
+        return user;
+    }
 }

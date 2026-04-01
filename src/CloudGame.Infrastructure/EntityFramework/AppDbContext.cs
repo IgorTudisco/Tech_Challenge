@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CloudGame.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata;
 
 namespace CloudGame.Infrastructure.EntityFramework
 {
@@ -12,6 +14,12 @@ namespace CloudGame.Infrastructure.EntityFramework
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
 
             base.OnModelCreating(modelBuilder);
-        }
+
+            modelBuilder.Entity<User>()
+                .HasData
+                (
+                    User.CreatingUser()
+                );
+        }        
     }
 }
