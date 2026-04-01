@@ -2,13 +2,14 @@ namespace CloudGame.Domain.Entities;
 
 public sealed class User : Entity<int>
 {
-    public User(string name, string email, string password, DateTime birthDate)
+    public User(string name, string email, string password, DateTime birthDate, bool isAdmin)
     {
         Name = name;
         Email = email;
         SetPassword(password);
         BirthDate = birthDate;
         Active = true;
+        IsAdmin = isAdmin;
     }
 
     public string Name { get; private set; }
@@ -22,6 +23,7 @@ public sealed class User : Entity<int>
     public bool Active { get; private set; }
 
     public DateTime? UpdateAt { get; private set; }
+    public bool IsAdmin { get; private set; }
 
     public void SetActive(bool active)
     {

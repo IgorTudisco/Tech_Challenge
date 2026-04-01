@@ -8,7 +8,7 @@ namespace CloudGame.Application.Handlers.UserHandler.Create
     {
         public async Task<CreateUserCommandResponse> HandleAsync(CreateUserCommand command, CancellationToken cancellationToken)
         {
-            User newUser = new(command.Name, command.Email, command.Password, command.BirthDate);
+            User newUser = new(command.Name, command.Email, command.Password, command.BirthDate, false);
 
             await userWriteOnlyRepository.AddAsync(newUser);
 

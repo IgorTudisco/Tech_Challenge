@@ -19,6 +19,7 @@ namespace CloudGame.Infrastructure.EntityFramework.Mappings
             builder.Property(p => p.CreatedAt).HasColumnType("DATETIME2");
             builder.Property(p => p.UpdateAt).HasColumnType("DATETIME2");
             builder.Property(p => p.Active).HasColumnType("BIT");
+            builder.Property(p => p.IsAdmin).HasColumnType("BIT");
         }
     }
 }
