@@ -7,7 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Handlers\User\Create\CreateUserCommandHandler.cs~RF7929cd9.TMP" />
+    <None Remove="Handlers\UserHandler\Create\CreateUserCommand.cs~RF498cf0f.TMP" />
+    <None Remove="Handlers\UserHandler\Create\CreateUserCommandHandler.cs~RF7929cd9.TMP" />
+    <None Remove="Handlers\UserHandler\Create\CreateUserCommandResponse.cs~RF4973f96.TMP" />
+    <None Remove="Interfaces\Security\ITokenService.cs~RF49a636b.TMP" />
   </ItemGroup>
 
   <ItemGroup>

@@ -10,6 +10,7 @@
     <None Remove="Dapper\DapperContext.cs~RF6389bf2.TMP" />
     <None Remove="Dapper\Repositories\UserRepository.cs~RF63b155e.TMP" />
     <None Remove="Dapper\Repositories\UserRepository.cs~RF64129c4.TMP" />
+    <None Remove="EntityFramework\Repositories\UserRepository.cs~RF49b6318.TMP" />
   </ItemGroup>
 
   <ItemGroup>
