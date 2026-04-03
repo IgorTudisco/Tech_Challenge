@@ -1,5 +1,8 @@
 ﻿using CloudGame.Application.Settings;
+using CloudGame.Domain.Entities;
 using CloudGame.Domain.Handlers;
+using CloudGame.Domain.Interfaces;
+using CloudGame.Domain.Interfaces.Security;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -8,13 +11,20 @@ using System.Text;
 
 namespace CloudGame.Application.Handlers.Auth.Login;
 
-public class LoginHandler(IOptions<JwtSettings> jwtSettingsOption) : IHandler<LoginCommand, LoginResponse>
+public class LoginHandler(IOptions<JwtSettings> jwtSettingsOption, IUserReadOnlyRepository userReadOnlyRepository,
+    IPasswordHasher passwordHasher) : IHandler<LoginCommand, LoginResponse>
 {
     public async Task<LoginResponse> HandleAsync(LoginCommand command, CancellationToken cancellationToken)
     {
+
+        User? user = await userReadOnlyRepository.GetByEmailAsync(command.User);        
+
+        if(user is null || user.Active == false || !passwordHasher.VerifyPassword(user.Password, command.Password))
+            throw new Exception("Login ou senha invalida");
+
         Claim[] claims = [
-             new(ClaimTypes.Name, "nome do usuario"),
-             new(ClaimTypes.Role, "admin"),
+             new(ClaimTypes.Name, user.Name),
+             new(ClaimTypes.Role, user.IsAdmin ? "admin" : "user"),
         ];
 
         JwtSettings jwtSettings = jwtSettingsOption.Value;

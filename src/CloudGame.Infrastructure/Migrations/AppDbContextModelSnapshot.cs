@@ -25,6 +25,7 @@ namespace CloudGame.Infrastructure.Migrations
             modelBuilder.Entity("CloudGame.Domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INT");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
@@ -59,19 +60,6 @@ namespace CloudGame.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("User", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 0,
-                            Active = true,
-                            BirthDate = new DateTime(2026, 3, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            CreatedAt = new DateTime(2026, 3, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Email = "admin@cloudgame.com",
-                            IsAdmin = true,
-                            Name = "admin",
-                            Password = "admingame"
-                        });
                 });
 #pragma warning restore 612, 618
         }
