@@ -3,10 +3,14 @@ using CloudGame.Application.Handlers.UserHandler.Create;
 using CloudGame.Application.Settings;
 using CloudGame.Domain.Handlers;
 using CloudGame.Domain.Interfaces;
+using CloudGame.Domain.Interfaces.Security;
 using CloudGame.Infrastructure.Dapper;
 using CloudGame.Infrastructure.Dapper.Contracts;
 using CloudGame.Infrastructure.Dapper.Repositories;
 using CloudGame.Infrastructure.EntityFramework;
+using CloudGame.Infrastructure.EntityFramework.Repositories;
+using CloudGame.Infrastructure.EntityFramework.Seeder;
+using CloudGame.Infrastructure.Security;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Data.SqlClient;
@@ -60,8 +64,15 @@ builder.Services.AddScoped<IDbConnection>(sp =>
 builder.Services.AddScoped<IDapperContext>(sp=> new DapperContext(builder.Configuration.GetConnectionString("Default")));
 
 builder.Services.AddScoped<IUserReadOnlyRepository, UserReadOnlyRepository>();
+builder.Services.AddScoped<IUserWriteOnlyRepository, UserWriteOnlyRepository>();
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(sp=> new UnitOfWork(sp.GetRequiredService<AppDbContext>()));
+
+
+builder.Services.AddScoped<IPasswordHasher, Argon2PasswordHasher>();
 
 builder.Services.AddScoped<IHandler<LoginCommand, LoginResponse>, LoginHandler>();
+builder.Services.AddScoped<IHandler<CreateUserCommand, CreateUserCommandResponse>, CreateUserCommandHandler>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -89,6 +100,14 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var appDbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();    
+
+    await DatabaseSeeder.SeedAsync(appDbContext, passwordHasher);
+}
 
 if (app.Environment.IsDevelopment())
 {

@@ -3,7 +3,7 @@ using CloudGame.Domain.Interfaces;
 
 namespace CloudGame.Infrastructure.EntityFramework.Repositories
 {
-    public sealed class UserRepository(AppDbContext dbContext) : AbstractRepository<User, int>(dbContext), IUserWriteOnlyRepository
+    public sealed class UserWriteOnlyRepository(AppDbContext dbContext) : AbstractRepository<User, int>(dbContext), IUserWriteOnlyRepository
     {
     }
 }

@@ -1,5 +1,3 @@
-using System.Globalization;
-
 namespace CloudGame.Domain.Entities;
 
 public sealed class User : Entity<int>
@@ -54,4 +52,6 @@ public sealed class User : Entity<int>
         };
         return user;
     }
+
+    private User() { }
 }
