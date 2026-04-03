@@ -15,11 +15,7 @@ namespace CloudGame.Infrastructure.EntityFramework
 
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<User>()
-                .HasData
-                (
-                    User.CreatingUser()
-                );
+            modelBuilder.Entity<User>();
         }        
     }
 }

@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace CloudGame.Domain.Entities;
 
 public sealed class User : Entity<int>
@@ -23,6 +25,7 @@ public sealed class User : Entity<int>
     public bool Active { get; private set; }
 
     public DateTime? UpdateAt { get; private set; }
+
     public bool IsAdmin { get; private set; }    
 
     public void SetActive(bool active)
@@ -30,12 +33,12 @@ public sealed class User : Entity<int>
         Active = active;
     }
 
-    public void SetPassword(string password)
+    public void SetPassword(string passwordHash)
     {
-        if (password?.Length < 8)
-            throw new ArgumentException("A senha precisa ter no minino 8 caracteres.");
+        if (string.IsNullOrWhiteSpace(passwordHash))
+            throw new ArgumentException("A senha é obrigatoria.");
 
-        Password = password!;
+        Password = passwordHash;
     }
 
     public void SetUpdateAt()
