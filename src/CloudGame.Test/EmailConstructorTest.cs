@@ -1,7 +1,7 @@
 ﻿using CloudGame.Domain.ValueObjects;
 
 namespace CloudGame.Test
-{    
+{
     public class EmailConstructorTest
     {
         [Fact]
@@ -21,7 +21,7 @@ namespace CloudGame.Test
             string emailString = "grupo6@gmail.com";
 
             //act
-            Email email =new Email(emailString);
+            Email email = new Email(emailString);
 
             //assert
             Assert.True(email.EmailAdressValue.Equals(emailString));
