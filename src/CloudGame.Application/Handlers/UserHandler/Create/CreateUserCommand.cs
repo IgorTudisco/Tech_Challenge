@@ -2,7 +2,7 @@
 
 namespace CloudGame.Application.Handlers.UserHandler.Create;
 
-public sealed class CreateUserCommand: ICommand
+public sealed class CreateUserCommand : ICommand
 {
     public string Name { get; set; }
 

@@ -55,18 +55,18 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer
     (
         builder.Configuration.GetConnectionString("Default")
-    )    
+    )
 );
 
 builder.Services.AddScoped<IDbConnection>(sp =>
     new SqlConnection(builder.Configuration.GetConnectionString("Default")));
 
-builder.Services.AddScoped<IDapperContext>(sp=> new DapperContext(builder.Configuration.GetConnectionString("Default")));
+builder.Services.AddScoped<IDapperContext>(sp => new DapperContext(builder.Configuration.GetConnectionString("Default")));
 
 builder.Services.AddScoped<IUserReadOnlyRepository, UserReadOnlyRepository>();
 builder.Services.AddScoped<IUserWriteOnlyRepository, UserWriteOnlyRepository>();
 
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(sp=> new UnitOfWork(sp.GetRequiredService<AppDbContext>()));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(sp => new UnitOfWork(sp.GetRequiredService<AppDbContext>()));
 
 
 builder.Services.AddScoped<IPasswordHasher, Argon2PasswordHasher>();
@@ -104,7 +104,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var appDbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();    
+    var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
 
     await DatabaseSeeder.SeedAsync(appDbContext, passwordHasher);
 }

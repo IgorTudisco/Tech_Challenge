@@ -20,6 +20,6 @@ public sealed class UserReadOnlyRepository : AbstractRepository<User, int>, IUse
     public async Task<User?> GetByEmailAsync(string email)
     {
         using IDbConnection connection = Context.OpenConnection();
-        return await connection.QueryFirstOrDefaultAsync<User>("SELECT Id,Name,Email,Password,Active,IsAdmin FROM [User] WHERE Email = @email", new { email });        
+        return await connection.QueryFirstOrDefaultAsync<User>("SELECT Id,Name,Email,Password,Active,IsAdmin FROM [User] WHERE Email = @email", new { email });
     }
 }

@@ -1,10 +1,9 @@
 ﻿using FluentValidation;
-using System.Text.RegularExpressions;
 
 namespace CloudGame.Application.Handlers.UserHandler.Create;
 
 public sealed class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
-{  
+{
     public CreateUserCommandValidator()
     {
         RuleFor(x => x.Name)

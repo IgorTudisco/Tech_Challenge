@@ -1,6 +1,5 @@
 ﻿using CloudGame.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata;
 
 namespace CloudGame.Infrastructure.EntityFramework
 {
@@ -16,6 +15,6 @@ namespace CloudGame.Infrastructure.EntityFramework
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<User>();
-        }        
+        }
     }
 }
