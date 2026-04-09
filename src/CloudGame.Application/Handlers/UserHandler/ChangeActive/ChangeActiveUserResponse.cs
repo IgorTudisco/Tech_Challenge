@@ -2,7 +2,6 @@
 
 namespace CloudGame.Application.Handlers.UserHandler.ChangeActive;
 
-public class ChangeActiveUserCommand : ICommand
+public sealed class ChangeActiveUserResponse : IResponse
 {
-    public int Id { get; set; }
 }
