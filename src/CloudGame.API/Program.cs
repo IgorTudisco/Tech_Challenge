@@ -1,5 +1,6 @@
 using CloudGame.Application.Handlers.Auth.Login;
 using CloudGame.Application.Handlers.UserHandler.Create;
+using CloudGame.Application.Handlers.UserHandler.Update;
 using CloudGame.Application.Settings;
 using CloudGame.Domain.Handlers;
 using CloudGame.Domain.Interfaces;
@@ -73,6 +74,7 @@ builder.Services.AddScoped<IPasswordHasher, Argon2PasswordHasher>();
 
 builder.Services.AddScoped<IHandler<LoginCommand, LoginResponse>, LoginHandler>();
 builder.Services.AddScoped<IHandler<CreateUserCommand, CreateUserCommandResponse>, CreateUserCommandHandler>();
+builder.Services.AddScoped<IHandler<UpdateUserCommand, UpdateUserResponse>, UpdateUserHandler>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

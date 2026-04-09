@@ -6,12 +6,9 @@ using System.Data;
 
 namespace CloudGame.Infrastructure.Dapper.Repositories;
 
-public sealed class UserReadOnlyRepository : AbstractRepository<User, int>, IUserReadOnlyRepository
+public sealed class UserReadOnlyRepository(IDapperContext context)
+    : AbstractRepository<User, int>(context), IUserReadOnlyRepository
 {
-    public UserReadOnlyRepository(IDapperContext context) : base(context)
-    {
-    }
-
     public Task<IEnumerable<User>> FindAsync()
     {
         throw new NotImplementedException();

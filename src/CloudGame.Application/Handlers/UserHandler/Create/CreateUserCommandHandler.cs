@@ -8,7 +8,9 @@ namespace CloudGame.Application.Handlers.UserHandler.Create;
 public sealed class CreateUserCommandHandler(IUserWriteOnlyRepository userWriteOnlyRepository,
     IPasswordHasher passwordHasher, IUnitOfWork unitOfWork) : IHandler<CreateUserCommand, CreateUserCommandResponse>
 {
-    public async Task<CreateUserCommandResponse> HandleAsync(CreateUserCommand command, CancellationToken cancellationToken)
+    public async Task<CreateUserCommandResponse> HandleAsync(
+        CreateUserCommand command,
+        CancellationToken cancellationToken)
     {
         string passwordHash = passwordHasher.CreateHash(command.Password);
 

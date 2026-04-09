@@ -53,5 +53,12 @@ public sealed class User : Entity<int>
         return user;
     }
 
+    public void UpdateUser(string name, string email, DateTime birthDate)
+    {
+        Name = name;
+        Email = email;
+        BirthDate = birthDate;
+    }
+
     private User() { }
 }

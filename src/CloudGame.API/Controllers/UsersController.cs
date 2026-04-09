@@ -1,4 +1,5 @@
 ﻿using CloudGame.Application.Handlers.UserHandler.Create;
+using CloudGame.Application.Handlers.UserHandler.Update;
 using CloudGame.Domain.Handlers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +14,23 @@ namespace CloudGame.API.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> CreateAsync([FromBody] CreateUserCommand command, [FromServices] IHandler<CreateUserCommand, CreateUserCommandResponse> handler)
+        public async Task<IActionResult> CreateAsync(
+            [FromBody] CreateUserCommand command,
+            [FromServices] IHandler<CreateUserCommand, CreateUserCommandResponse> handler,
+            CancellationToken cancellationToken)
         {
-            var response = await handler.HandleAsync(command, CancellationToken.None);
+            var response = await handler.HandleAsync(command, cancellationToken);
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> UpdateAsync(
+            [FromBody] UpdateUserCommand command,
+            [FromServices] IHandler<UpdateUserCommand, UpdateUserResponse> handler,
+            CancellationToken cancellationToken)
+        {
+            var response = await handler.HandleAsync(command, cancellationToken);
             return Ok(response);
         }
     }
