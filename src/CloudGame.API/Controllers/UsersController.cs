@@ -24,7 +24,7 @@ public class UsersController : Controller
         return Ok(response);
     }
 
-    [HttpPost]
+    [HttpPut]
     [AllowAnonymous]
     public async Task<IActionResult> UpdateAsync(
         [FromBody] UpdateUserCommand command,
@@ -35,7 +35,7 @@ public class UsersController : Controller
         return Ok(response);
     }
 
-    [HttpPost]
+    [HttpPost("ChangeActiveUser")]
     [AllowAnonymous]
     public async Task<IActionResult> ChangeActiveUserAsync(
         [FromBody] ChangeActiveUserCommand command,
