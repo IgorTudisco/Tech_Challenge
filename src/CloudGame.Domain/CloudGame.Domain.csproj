@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -7,8 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Interfaces\IUserReadOnlyRepository.cs~RF62f91ad.TMP" />
+    <None Remove="Entities\Entity.cs~RF781a9dc.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Entities\" />
-    <Folder Include="Contracts\" />
   </ItemGroup>
 
 </Project>
