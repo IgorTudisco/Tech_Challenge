@@ -1,4 +1,5 @@
 ﻿using CloudGame.Application.Settings;
+using CloudGame.Domain.Commom;
 using CloudGame.Domain.Entities;
 using CloudGame.Domain.Handlers;
 using CloudGame.Domain.Interfaces;
@@ -14,13 +15,13 @@ namespace CloudGame.Application.Handlers.Auth.Login;
 public class LoginHandler(IOptions<JwtSettings> jwtSettingsOption, IUserReadOnlyRepository userReadOnlyRepository,
     IPasswordHasher passwordHasher) : IHandler<LoginCommand, LoginResponse>
 {
-    public async Task<LoginResponse> HandleAsync(LoginCommand command, CancellationToken cancellationToken)
+    public async Task<Result<LoginResponse>> HandleAsync(LoginCommand command, CancellationToken cancellationToken)
     {
 
         User? user = await userReadOnlyRepository.GetByEmailAsync(command.User);
 
         if (user is null || user.Active == false || !passwordHasher.VerifyPassword(user.Password, command.Password))
-            throw new Exception("Login ou senha invalida");
+            return Result<LoginResponse>.Failure([new("LoginInvalido", "Login ou senha invalida")]);        
 
         Claim[] claims = [
              new(ClaimTypes.Name, user.Name),
@@ -43,10 +44,10 @@ public class LoginHandler(IOptions<JwtSettings> jwtSettingsOption, IUserReadOnly
         JwtSecurityTokenHandler tokenHandler = new();
         var securityToken = tokenHandler.CreateToken(tokenDescriptor);
 
-        return new()
+        return Result<LoginResponse>.Success(new()
         {
             Token = tokenHandler.WriteToken(securityToken),
             ExpirationDate = expirationDate,
-        };
+        });
     }
 }

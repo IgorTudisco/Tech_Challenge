@@ -1,4 +1,5 @@
-﻿using CloudGame.Application.Handlers.UserHandler.ChangeActive;
+﻿using CloudGame.API.Extensions;
+using CloudGame.Application.Handlers.UserHandler.ChangeActive;
 using CloudGame.Application.Handlers.UserHandler.Create;
 using CloudGame.Application.Handlers.UserHandler.Update;
 using CloudGame.Domain.Handlers;
@@ -20,29 +21,28 @@ public class UsersController : Controller
         [FromServices] IHandler<CreateUserCommand, CreateUserCommandResponse> handler,
         CancellationToken cancellationToken)
     {
-        var response = await handler.HandleAsync(command, cancellationToken);
-        return Ok(response);
+        var result = await handler.HandleAsync(command, cancellationToken);
+        return result.ToActionResult();
     }
 
-    [HttpPut]
-    [AllowAnonymous]
+    [HttpPut]    
     public async Task<IActionResult> UpdateAsync(
         [FromBody] UpdateUserCommand command,
         [FromServices] IHandler<UpdateUserCommand, UpdateUserResponse> handler,
         CancellationToken cancellationToken)
     {
-        var response = await handler.HandleAsync(command, cancellationToken);
-        return Ok(response);
+        var result = await handler.HandleAsync(command, cancellationToken);
+        return result.ToActionResult();
     }
 
     [HttpPost("ChangeActiveUser")]
-    [AllowAnonymous]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> ChangeActiveUserAsync(
         [FromBody] ChangeActiveUserCommand command,
-        [FromServices] IHandler<ChangeActiveUserCommand, ChangeActiveUserResponse> handler,
+        [FromServices] IHandler<ChangeActiveUserCommand> handler,
         CancellationToken cancellationToken)
     {
-        var response = await handler.HandleAsync(command, cancellationToken);
-        return Ok(response);
+        var result = await handler.HandleAsync(command, cancellationToken);
+        return result.ToActionResult();
     }
 }

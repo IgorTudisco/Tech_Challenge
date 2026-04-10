@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace CloudGame.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstMigration : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -14,7 +15,7 @@ namespace CloudGame.Infrastructure.Migrations
                 name: "User",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INT", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "VARCHAR(120)", nullable: false),
                     Email = table.Column<string>(type: "VARCHAR(120)", nullable: false),
@@ -22,6 +23,7 @@ namespace CloudGame.Infrastructure.Migrations
                     BirthDate = table.Column<DateTime>(type: "DATETIME2", nullable: false),
                     Active = table.Column<bool>(type: "BIT", nullable: false),
                     UpdateAt = table.Column<DateTime>(type: "DATETIME2", nullable: true),
+                    IsAdmin = table.Column<bool>(type: "BIT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "DATETIME2", nullable: false)
                 },
                 constraints: table =>

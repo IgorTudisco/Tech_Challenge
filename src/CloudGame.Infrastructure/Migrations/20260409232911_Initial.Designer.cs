@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CloudGame.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260401004942_FirstMigration")]
-    partial class FirstMigration
+    [Migration("20260409232911_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,7 +28,8 @@ namespace CloudGame.Infrastructure.Migrations
             modelBuilder.Entity("CloudGame.Domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
-                        .HasColumnType("INT");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
@@ -44,6 +45,9 @@ namespace CloudGame.Infrastructure.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("VARCHAR(120)");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("BIT");
 
                     b.Property<string>("Name")
                         .IsRequired()

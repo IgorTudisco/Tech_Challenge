@@ -1,4 +1,5 @@
-﻿using CloudGame.Application.Handlers.Auth.Login;
+﻿using CloudGame.API.Extensions;
+using CloudGame.Application.Handlers.Auth.Login;
 using CloudGame.Domain.Handlers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ public class AuthController : Controller
         CancellationToken cancellationToken)
     {
         var loginResult = await handler.HandleAsync(command, cancellationToken);
-        return Ok(loginResult);
+        return loginResult.ToActionResult();
     }
 
     [HttpPost]

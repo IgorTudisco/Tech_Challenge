@@ -1,4 +1,5 @@
-﻿using CloudGame.Domain.Entities;
+﻿using CloudGame.Domain.Commom;
+using CloudGame.Domain.Entities;
 using CloudGame.Domain.Handlers;
 using CloudGame.Domain.Interfaces;
 using CloudGame.Domain.Interfaces.Security;
@@ -8,7 +9,7 @@ namespace CloudGame.Application.Handlers.UserHandler.Create;
 public sealed class CreateUserCommandHandler(IUserWriteOnlyRepository userWriteOnlyRepository,
     IPasswordHasher passwordHasher, IUnitOfWork unitOfWork) : IHandler<CreateUserCommand, CreateUserCommandResponse>
 {
-    public async Task<CreateUserCommandResponse> HandleAsync(
+    public async Task<Result<CreateUserCommandResponse>> HandleAsync(
         CreateUserCommand command,
         CancellationToken cancellationToken)
     {
@@ -20,6 +21,6 @@ public sealed class CreateUserCommandHandler(IUserWriteOnlyRepository userWriteO
 
         await unitOfWork.SaveChangesAsync();
 
-        return new CreateUserCommandResponse(newUser.Id, newUser.Name, newUser.Email);
+        return Result<CreateUserCommandResponse>.Success(new CreateUserCommandResponse(newUser.Id, newUser.Name, newUser.Email));
     }
 }
