@@ -7,6 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Commom\Pagination.cs~RFcb959f5.TMP" />
+    <None Remove="Commom\Pagination.cs~RFcdd25e6.TMP" />
+    <None Remove="Commom\PaginationParameters.cs~RFccd0da8.TMP" />
     <None Remove="Interfaces\IUserReadOnlyRepository.cs~RF62f91ad.TMP" />
     <None Remove="Entities\Entity.cs~RF781a9dc.TMP" />
   </ItemGroup>

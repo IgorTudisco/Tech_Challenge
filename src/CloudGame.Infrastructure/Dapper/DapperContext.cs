@@ -7,7 +7,7 @@ namespace CloudGame.Infrastructure.Dapper
 {
     public class DapperContext(IConfiguration configuration) : IDapperContext
     {
-        private readonly string _connectionString = configuration.GetConnectionString("DefaultConnection");        
+        private readonly string _connectionString = configuration.GetConnectionString("Default");        
 
         public IDbConnection OpenConnection() => new SqlConnection(_connectionString);
     }
