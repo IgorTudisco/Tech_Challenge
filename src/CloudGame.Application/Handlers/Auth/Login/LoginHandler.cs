@@ -17,7 +17,6 @@ public class LoginHandler(IOptions<JwtSettings> jwtSettingsOption, IUserReadOnly
 {
     public async Task<Result<LoginResponse>> HandleAsync(LoginCommand command, CancellationToken cancellationToken)
     {
-
         User? user = await userReadOnlyRepository.GetByEmailAsync(command.User);
 
         if (user is null || user.Active == false || !passwordHasher.VerifyPassword(user.Password, command.Password))
