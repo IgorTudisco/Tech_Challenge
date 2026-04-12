@@ -4,10 +4,8 @@ using CloudGame.Domain.Commom;
 using CloudGame.Domain.Entities;
 using CloudGame.Domain.Interfaces;
 using CloudGame.Domain.Interfaces.Security;
-using CloudGame.Domain.ValueObjects;
 using Microsoft.Extensions.Options;
 using Moq;
-using System.Xml.Linq;
 
 namespace CloudGame.Test.Handlers.Auth;
 
@@ -80,9 +78,43 @@ public class LoginHandlerTests
 
         User userMockResponse = new("MockedUser", "MockedEmail", "MockedPassword", DateTime.Now, false);
         userMockResponse.SetActive(false);
-        mock.Setup(x => x.GetByEmailAsync(command.User)).ReturnsAsync(null as User);
+        mock.Setup(x => x.GetByEmailAsync(command.User)).ReturnsAsync(userMockResponse);
 
         var sut = MakeSut(userReadOnlyRepository: mock.Object);
+
+        var result = await sut.HandleAsync(command, CancellationToken.None);
+
+        Assert.NotNull(result);
+        Assert.False(result.IsSuccess);
+        Assert.Single(result.Errors);
+        Assert.Equal(FailedLoginError.Code, result.Errors.Single().Code);
+        Assert.Equal(FailedLoginError.Description, result.Errors.Single().Description);
+    }
+
+
+    [Fact]
+    public async Task ShouldReturnInvalidLoginWhenUserPasswordNotMatch_Test()
+    {
+        var command = new LoginCommand { User = "invalid_user", Password = "invalid_password" };
+
+        // User Repo & Mock
+        var userReadOnlyRepositoryMock = new Mock<IUserReadOnlyRepository>();
+        User userMockResponse = new("MockedUser", "MockedEmail", "MockedPassword", DateTime.Now, false);
+        userMockResponse.SetActive(true);
+        userReadOnlyRepositoryMock
+            .Setup(x => x.GetByEmailAsync(command.User))
+            .ReturnsAsync(userMockResponse);
+
+        // PasswordHasher & Mock
+        var passwordHasherMock = new Mock<IPasswordHasher>();
+        passwordHasherMock
+            .Setup(x => x.VerifyPassword(userMockResponse.Password, command.Password))
+            .Returns(false);
+
+        var sut = MakeSut(
+                    userReadOnlyRepository: userReadOnlyRepositoryMock.Object,
+                    passwordHasher: passwordHasherMock.Object
+                );
 
         var result = await sut.HandleAsync(command, CancellationToken.None);
 

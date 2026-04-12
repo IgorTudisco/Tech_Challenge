@@ -12,7 +12,9 @@ using System.Text;
 
 namespace CloudGame.Application.Handlers.Auth.Login;
 
-public class LoginHandler(IOptions<JwtSettings> jwtSettingsOption, IUserReadOnlyRepository userReadOnlyRepository,
+public class LoginHandler(
+    IOptions<JwtSettings> jwtSettingsOption, 
+    IUserReadOnlyRepository userReadOnlyRepository,
     IPasswordHasher passwordHasher) : IHandler<LoginCommand, LoginResponse>
 {
     public async Task<Result<LoginResponse>> HandleAsync(LoginCommand command, CancellationToken cancellationToken)
