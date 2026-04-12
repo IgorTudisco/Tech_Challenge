@@ -3,7 +3,7 @@ using CloudGame.Domain.Parameters;
 
 namespace CloudGame.Application.Handlers.UserHandler.Find;
 
-public sealed class FindUsersQuery: ICommand
+public sealed class FindUsersQuery : ICommand
 {
     public FindUsersQuery()
     {

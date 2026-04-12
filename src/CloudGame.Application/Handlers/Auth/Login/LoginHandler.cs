@@ -21,7 +21,7 @@ public class LoginHandler(IOptions<JwtSettings> jwtSettingsOption, IUserReadOnly
         User? user = await userReadOnlyRepository.GetByEmailAsync(command.User);
 
         if (user is null || user.Active == false || !passwordHasher.VerifyPassword(user.Password, command.Password))
-            return Result<LoginResponse>.Failure([new("LoginInvalido", "Login ou senha invalida")]);        
+            return Result<LoginResponse>.Failure([new("LoginInvalido", "Login ou senha invalida")]);
 
         Claim[] claims = [
              new(ClaimTypes.Name, user.Name),

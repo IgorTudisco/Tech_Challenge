@@ -28,7 +28,7 @@ namespace CloudGame.Infrastructure.Extensions
             services.AddScoped<IDbConnection>(sp => new SqlConnection(configuration.GetConnectionString("Default")));
             services.AddScoped<IDapperContext>(sp => new DapperContext(configuration));
             services.AddScoped<IUserWriteOnlyRepository, UserWriteOnlyRepository>();
-            services.AddScoped<IUserReadOnlyRepository, UserReadOnlyRepository>();          
+            services.AddScoped<IUserReadOnlyRepository, UserReadOnlyRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>(sp => new UnitOfWork(sp.GetRequiredService<AppDbContext>()));
             services.AddScoped<IPasswordHasher, Argon2PasswordHasher>();
 

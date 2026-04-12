@@ -26,7 +26,7 @@ public sealed class Result<T> : Result where T : notnull
     }
 
     private Result(List<Error> errors) : base(errors)
-    {}
+    { }
 
     public static Result<T> Success(T data) => new(data);
 

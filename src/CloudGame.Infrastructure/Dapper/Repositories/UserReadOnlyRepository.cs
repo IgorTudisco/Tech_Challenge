@@ -2,7 +2,6 @@
 using CloudGame.Domain.Entities;
 using CloudGame.Domain.Interfaces;
 using CloudGame.Domain.Parameters;
-using CloudGame.Domain.ValueObjects;
 using CloudGame.Infrastructure.Dapper.Contracts;
 using Dapper;
 using System.Data;
