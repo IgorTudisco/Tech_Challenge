@@ -4,8 +4,10 @@ using CloudGame.Domain.Commom;
 using CloudGame.Domain.Entities;
 using CloudGame.Domain.Interfaces;
 using CloudGame.Domain.Interfaces.Security;
+using CloudGame.Domain.ValueObjects;
 using Microsoft.Extensions.Options;
 using Moq;
+using System.Xml.Linq;
 
 namespace CloudGame.Test.Handlers.Auth;
 
@@ -50,12 +52,34 @@ public class LoginHandlerTests
 
 
     [Fact]
-    public async Task ShouldReturnInvalidLoginWhenUserNotFount_Test()
+    public async Task ShouldReturnInvalidLoginWhenUserNotFound_Test()
     {
         var command = new LoginCommand { User = "invalid_user" };
 
         var mock = new Mock<IUserReadOnlyRepository>();
 
+        mock.Setup(x => x.GetByEmailAsync(command.User)).ReturnsAsync(null as User);
+
+        var sut = MakeSut(userReadOnlyRepository: mock.Object);
+
+        var result = await sut.HandleAsync(command, CancellationToken.None);
+
+        Assert.NotNull(result);
+        Assert.False(result.IsSuccess);
+        Assert.Single(result.Errors);
+        Assert.Equal(FailedLoginError.Code, result.Errors.Single().Code);
+        Assert.Equal(FailedLoginError.Description, result.Errors.Single().Description);
+    }
+
+    [Fact]
+    public async Task ShouldReturnInvalidLoginWhenUserIsNotActive_Test()
+    {
+        var command = new LoginCommand { User = "invalid_user" };
+
+        var mock = new Mock<IUserReadOnlyRepository>();
+
+        User userMockResponse = new("MockedUser", "MockedEmail", "MockedPassword", DateTime.Now, false);
+        userMockResponse.SetActive(false);
         mock.Setup(x => x.GetByEmailAsync(command.User)).ReturnsAsync(null as User);
 
         var sut = MakeSut(userReadOnlyRepository: mock.Object);
