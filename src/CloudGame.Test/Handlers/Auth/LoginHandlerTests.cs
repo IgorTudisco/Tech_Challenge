@@ -124,4 +124,52 @@ public class LoginHandlerTests
         Assert.Equal(FailedLoginError.Code, result.Errors.Single().Code);
         Assert.Equal(FailedLoginError.Description, result.Errors.Single().Description);
     }
+
+    [Fact]
+    public async Task ShouldSuccessfullyLogin_Test()
+    {
+        var command = new LoginCommand { User = "valid_user", Password = "valid_password" };
+
+        // User Repo & Mock
+        var userReadOnlyRepositoryMock = new Mock<IUserReadOnlyRepository>();
+        User userMockResponse = new("MockedUser", "MockedEmail", "MockedPassword", DateTime.Now, false);
+        userMockResponse.SetActive(true);
+        userReadOnlyRepositoryMock
+            .Setup(x => x.GetByEmailAsync(command.User))
+            .ReturnsAsync(userMockResponse);
+
+        // PasswordHasher & Mock
+        var passwordHasherMock = new Mock<IPasswordHasher>();
+        passwordHasherMock
+            .Setup(x => x.VerifyPassword(userMockResponse.Password, command.Password))
+            .Returns(true);
+
+        var jwtSettingsOptionsMock = new Mock<IOptions<JwtSettings>>();
+        jwtSettingsOptionsMock.Setup(o => o.Value).Returns(new JwtSettings
+        {
+            //Long EncriptKey for tests
+            EncriptKey = "EncriptKeyEncriptKeyEncriptKeyEncriptKeyEncriptKeyEncriptKeyEncriptKeyEncriptKey",
+            ExpiresInMinutes = 60,
+            Audience = "Audience",
+            Issuer = "Issuer",
+        });
+
+        var sut = MakeSut(
+                    userReadOnlyRepository: userReadOnlyRepositoryMock.Object,
+                    passwordHasher: passwordHasherMock.Object,
+                    jwtSettingsOption: jwtSettingsOptionsMock.Object
+                );
+
+        var betweenExpirationDateFrom = DateTime.UtcNow.AddMinutes(jwtSettingsOptionsMock.Object.Value.ExpiresInMinutes);
+        var result = await sut.HandleAsync(command, CancellationToken.None);
+        var betweenExpirationDateTo = DateTime.UtcNow.AddMinutes(jwtSettingsOptionsMock.Object.Value.ExpiresInMinutes);
+        var resultData = result.Data!;
+
+        Assert.NotNull(result);
+        Assert.True(result.IsSuccess);
+        Assert.Empty(result.Errors);
+        Assert.True(resultData.ExpirationDate >= betweenExpirationDateFrom);
+        Assert.True(resultData.ExpirationDate <= betweenExpirationDateTo);
+        Assert.NotEmpty(resultData.Token);
+    }
 }
