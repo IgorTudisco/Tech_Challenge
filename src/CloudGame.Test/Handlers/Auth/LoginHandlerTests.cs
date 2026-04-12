@@ -91,7 +91,6 @@ public class LoginHandlerTests
         Assert.Equal(FailedLoginError.Description, result.Errors.Single().Description);
     }
 
-
     [Fact]
     public async Task ShouldReturnInvalidLoginWhenUserPasswordNotMatch_Test()
     {
