@@ -11,6 +11,13 @@ namespace CloudGame.API.Controllers;
 [Produces("application/json")]
 public class AuthController : Controller
 {
+    private readonly ILogger<AuthController> _logger;
+
+    public AuthController(ILogger<AuthController> logger)
+    {
+        _logger = logger;
+    }
+
     [AllowAnonymous]
     [HttpPost]
     [Route("Login")]
@@ -19,7 +26,10 @@ public class AuthController : Controller
         [FromServices] IHandler<LoginCommand, LoginResponse> handler,
         CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Tentativa de login para o usuário {User}", command.User);
         var loginResult = await handler.HandleAsync(command, cancellationToken);
+
+        _logger.LogInformation("Usuário {User} logado com sucesso", command.User);
         return loginResult.ToActionResult();
     }
 
