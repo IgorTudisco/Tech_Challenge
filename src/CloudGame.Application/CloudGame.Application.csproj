@@ -6,4 +6,23 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Handlers\UserHandler\Create\CreateUserCommand.cs~RF498cf0f.TMP" />
+    <None Remove="Handlers\UserHandler\Create\CreateUserCommandHandler.cs~RF7929cd9.TMP" />
+    <None Remove="Handlers\UserHandler\Create\CreateUserCommandResponse.cs~RF4973f96.TMP" />
+    <None Remove="Handlers\UserHandler\Find\FindUsersQueryResponse.cs~RFc939f82.TMP" />
+    <None Remove="Handlers\UserHandler\Find\FindUsersQueryResponse.cs~RFce25857.TMP" />
+    <None Remove="Handlers\UserHandler\GetById\GetUserByIdResponse.cs~RFc6afb56.TMP" />
+    <None Remove="Interfaces\Security\ITokenService.cs~RF49a636b.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CloudGame.Domain\CloudGame.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

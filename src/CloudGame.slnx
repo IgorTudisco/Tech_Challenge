@@ -1,5 +1,5 @@
 <Solution>
-  <Folder Name="/tests/">
+  <Folder Name="/CloudGame.Tests/">
     <Project Path="CloudGame.Test/CloudGame.Test.csproj" />
   </Folder>
   <Project Path="CloudGame.API/CloudGame.API.csproj" />
