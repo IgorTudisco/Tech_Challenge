@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using CloudGame.Domain.Commom;
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace CloudGame.API.Handlers;
 
@@ -12,7 +13,7 @@ public sealed class CloudGameExceptionHandler(ILogger<CloudGameExceptionHandler>
 
         httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
-        await httpContext.Response.WriteAsync(exception.ToString(), cancellationToken);
+        await httpContext.Response.WriteAsync(new Error("Exception", $"{exception.Message} - traceid:{httpContext.TraceIdentifier}").ToString(), cancellationToken);
         return true;
     }
 }

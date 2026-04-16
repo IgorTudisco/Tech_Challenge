@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using Serilog;
+using Serilog.Formatting.Json;
 using System.Data;
 using System.Text;
 
@@ -92,7 +94,14 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Host.UseSerilog((ctx, configuration) =>
+configuration.ReadFrom.Configuration(ctx.Configuration)
+.Enrich.FromLogContext().WriteTo.Console(new JsonFormatter()));
+    
+
 var app = builder.Build();
+
+app.UseSerilogRequestLogging();
 
 using (var scope = app.Services.CreateScope())
 {
