@@ -26,10 +26,10 @@ public class AuthController : Controller
         [FromServices] IHandler<LoginCommand, LoginResponse> handler,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Tentativa de login para o usuário {User}", command.User);
+        _logger.LogInformation("Login attempt for user {User}", command.User);
         var loginResult = await handler.HandleAsync(command, cancellationToken);
 
-        _logger.LogInformation("Usuário {User} logado com sucesso", command.User);
+        _logger.LogInformation("The user {User} has successfully logged in", command.User);
         return loginResult.ToActionResult();
     }
 
