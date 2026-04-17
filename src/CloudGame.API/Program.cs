@@ -30,8 +30,7 @@ try
     builder.Host.UseSerilog((hostingContext, configuration) =>
     {
         configuration
-            .ReadFrom.Configuration(hostingContext.Configuration)
-            .WriteTo.Console();
+            .ReadFrom.Configuration(hostingContext.Configuration);
     });
 
     builder.Services.AddHealthChecks();
