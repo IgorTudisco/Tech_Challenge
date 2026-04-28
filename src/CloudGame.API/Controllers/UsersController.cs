@@ -14,12 +14,13 @@ namespace CloudGame.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class UsersController : Controller
+public class UsersController : ControllerBase
 {
-    public UsersController() { }
-
     [HttpPost]
     [AllowAnonymous]
+    [ProducesResponseType(typeof(Result<CreateUserCommandResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(Result), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> CreateAsync(
         [FromBody] CreateUserCommand command,
         [FromServices] IHandler<CreateUserCommand, CreateUserCommandResponse> handler,
@@ -31,6 +32,9 @@ public class UsersController : Controller
 
     [HttpGet("{id}")]
     [Authorize()]
+    [ProducesResponseType(typeof(Result<GetUserByIdResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(Result), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetByIdAsync(
         [FromRoute] int id,
         [FromServices] IHandler<GetUserByIdQuery, GetUserByIdResponse> handler,
@@ -43,7 +47,11 @@ public class UsersController : Controller
 
     [HttpGet]
     [Authorize(Roles = "admin")]
-    public async Task<IActionResult> FindAsync([FromQuery] FindUsersParameter parameters,
+    [ProducesResponseType(typeof(Result<Pagination<FindUsersQueryResponse>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(Result), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> FindAsync(
+        [FromQuery] FindUsersParameter parameters,
         [FromServices] IHandler<FindUsersQuery, Pagination<FindUsersQueryResponse>> handler,
         CancellationToken cancellationToken)
     {
@@ -53,6 +61,9 @@ public class UsersController : Controller
 
     [HttpPut]
     [Authorize()]
+    [ProducesResponseType(typeof(Result<UpdateUserResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(Result), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UpdateAsync(
         [FromBody] UpdateUserCommand command,
         [FromServices] IHandler<UpdateUserCommand, UpdateUserResponse> handler,
@@ -64,6 +75,9 @@ public class UsersController : Controller
 
     [HttpPost("ChangeActiveUser")]
     [Authorize(Roles = "admin")]
+    [ProducesResponseType(typeof(Result), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(Result), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ChangeActiveUserAsync(
         [FromBody] ChangeActiveUserCommand command,
         [FromServices] IHandler<ChangeActiveUserCommand> handler,
