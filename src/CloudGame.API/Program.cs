@@ -3,9 +3,7 @@ using CloudGame.Application.Extensions;
 using CloudGame.Application.Handlers.UserHandler.Create;
 using CloudGame.Application.Settings;
 using CloudGame.Domain.Commom;
-using CloudGame.Domain.Interfaces.Security;
 using CloudGame.Infrastructure.EntityFramework;
-using CloudGame.Infrastructure.EntityFramework.Seeder;
 using CloudGame.Infrastructure.Extensions;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -113,13 +111,11 @@ try
 
     Log.Information("The application has been built, and star the pipeline setup has started.");
 
-    using (var scope = app.Services.CreateScope())
+    await using (var scope = app.Services.CreateAsyncScope())
+    await using (var appDbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>())
     {
-        var appDbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
-
-        await DatabaseSeeder.SeedAsync(appDbContext, passwordHasher);
-    }
+        await appDbContext.Database.EnsureCreatedAsync();
+    }    
 
     if (app.Environment.IsDevelopment())
     {
