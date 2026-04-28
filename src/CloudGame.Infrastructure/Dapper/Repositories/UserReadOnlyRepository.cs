@@ -11,6 +11,13 @@ namespace CloudGame.Infrastructure.Dapper.Repositories;
 public sealed class UserReadOnlyRepository(IDapperContext context)
     : AbstractRepository<User, int>(context), IUserReadOnlyRepository
 {
+    public async Task<bool> CheckIfIsEmailBeingUsedAsync(string email)
+    {
+        using IDbConnection connection = Context.OpenConnection();
+        var result = await connection.QueryFirstOrDefaultAsync<int>("SELECT TOP 1 COUNT(1) FROM [User] WHERE Email = @Email", new { Email = email });
+        return result > 0;
+    }
+
     public async Task<Pagination<User>> FindAsync(FindUsersParameter parameters)
     {
         var sqlBuilder = new SqlBuilder();
