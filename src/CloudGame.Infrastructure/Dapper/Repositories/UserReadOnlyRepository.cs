@@ -14,7 +14,7 @@ public sealed class UserReadOnlyRepository(IDapperContext context)
     public async Task<bool> CheckIfIsEmailBeingUsedAsync(string email)
     {
         using IDbConnection connection = Context.OpenConnection();
-        var result = await connection.QueryFirstOrDefaultAsync<int>("SELECT TOP 1 COUNT(1) FROM [User] WHERE Email = @Email", new { Email = email });
+        var result = await connection.QueryFirstOrDefaultAsync<int>("SELECT TOP 1 COUNT(1) FROM Users WHERE Email = @Email", new { Email = email });
         return result > 0;
     }
 
@@ -56,6 +56,6 @@ public sealed class UserReadOnlyRepository(IDapperContext context)
     public override async Task<User> GetByIdAsync(int id)
     {
         using IDbConnection connection = Context.OpenConnection();
-        return await connection.QueryFirstOrDefaultAsync<User>("SELECT Id,Name,Email,Active,IsAdmin,BirthDate,CreatedAt,UpdateAt FROM Users WHERE Id = @id", new { id });
+        return await connection.QueryFirstOrDefaultAsync<User>("SELECT Id,Name,Email,Active,Password,IsAdmin,BirthDate,CreatedAt,UpdateAt FROM Users WHERE Id = @id", new { id });
     }
 }
