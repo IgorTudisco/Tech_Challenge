@@ -13,7 +13,7 @@ using System.Text;
 namespace CloudGame.Application.Handlers.Auth.Login;
 
 public class LoginHandler(
-    IOptions<JwtSettings> jwtSettingsOption, 
+    IOptions<JwtSettings> jwtSettingsOption,
     IUserReadOnlyRepository userReadOnlyRepository,
     IPasswordHasher passwordHasher) : IHandler<LoginCommand, LoginResponse>
 {
