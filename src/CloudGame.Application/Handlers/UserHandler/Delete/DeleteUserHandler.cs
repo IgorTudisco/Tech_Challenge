@@ -16,6 +16,12 @@ public class DeleteUserHandler(
         if (userToBeDeleted is null)
             return Result.Failure([new("NotFound", "Usuário não encontrado")]);
 
-        throw new NotImplementedException();
+        userToBeDeleted.DeleteData();
+
+        await userWriteOnlyRepository.UpdateAsync(userToBeDeleted);
+
+        await unitOfWork.SaveChangesAsync();
+
+        return Result.Success();
     }
 }
