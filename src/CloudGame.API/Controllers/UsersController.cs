@@ -1,6 +1,7 @@
 ﻿using CloudGame.API.Extensions;
 using CloudGame.Application.Handlers.UserHandler.ChangeActive;
 using CloudGame.Application.Handlers.UserHandler.Create;
+using CloudGame.Application.Handlers.UserHandler.Delete;
 using CloudGame.Application.Handlers.UserHandler.Find;
 using CloudGame.Application.Handlers.UserHandler.GetById;
 using CloudGame.Application.Handlers.UserHandler.Update;
@@ -81,6 +82,20 @@ public class UsersController : ControllerBase
     public async Task<IActionResult> ChangeActiveUserAsync(
         [FromBody] ChangeActiveUserCommand command,
         [FromServices] IHandler<ChangeActiveUserCommand> handler,
+        CancellationToken cancellationToken)
+    {
+        var result = await handler.HandleAsync(command, cancellationToken);
+        return result.ToActionResult();
+    }
+
+    [HttpDelete]
+    [Authorize(Roles = "admin")]
+    [ProducesResponseType(typeof(Result), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(Result), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(Result), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> DeleteUserAsync(
+        [FromBody] DeleteUserCommand command,
+        [FromServices] IHandler<DeleteUserCommand> handler,
         CancellationToken cancellationToken)
     {
         var result = await handler.HandleAsync(command, cancellationToken);
