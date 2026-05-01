@@ -11,6 +11,9 @@ public class DeleteUserHandler(
 {
     public async Task<Result> HandleAsync(DeleteUserCommand command, CancellationToken cancellationToken)
     {
+        if (command.Id <= 0)
+            return Result.Failure([new("NotFound", "Usuário não encontrado")]);
+
         var userToBeDeleted = await userReadOnlyRepository.GetByIdAsync(command.Id);
 
         if (userToBeDeleted is null)
