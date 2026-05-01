@@ -44,20 +44,19 @@ public sealed class User : Entity<int>
         UpdateAt = DateTime.UtcNow;
     }
 
-    public static User CreatingUser()
-    {
-        var user = new User("admin", "admin@cloudgame.com", "admingame", new DateTime(2026, 3, 31), true)
-        {
-            CreatedAt = new DateTime(2026, 03, 31)
-        };
-        return user;
-    }
-
     public void UpdateUser(string name, string email, DateTime birthDate)
     {
         Name = name;
         Email = email;
         BirthDate = birthDate;
+    }
+
+    public void DeleteData()
+    {
+        Name = "@deleted";
+        Password = "@deleted";
+        Active = false;
+        BirthDate = new DateTime(1950, 1, 1);
     }
 
     private User() { }
