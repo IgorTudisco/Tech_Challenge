@@ -38,6 +38,32 @@ public class DeleteUserHandlerTest
     }
 
     [Fact]
+    public async Task ShouldBeInvalidWhenUserIdInCommandIsNotValid_Test()
+    {
+        var command = new DeleteUserCommand { Id = 0 };
+
+        var userReadonlyRepositoryMock = new Mock<IUserReadOnlyRepository>();
+        var userWriteRepositoryMock = new Mock<IUserWriteOnlyRepository>();
+        var unitOfWorkMock = new Mock<IUnitOfWork>();
+
+        var sut = MakeSut(userReadOnlyRepository: userReadonlyRepositoryMock.Object,
+                    userWriteOnlyRepository: userWriteRepositoryMock.Object,
+                    unitOfWork: unitOfWorkMock.Object);
+
+        var result = await sut.HandleAsync(command, CancellationToken.None);
+
+        Assert.NotNull(result);
+        Assert.False(result.IsSuccess);
+        Assert.Single(result.Errors);
+        Assert.Equal(FailedDeleteError.Code, result.Errors.Single().Code);
+        Assert.Equal(FailedDeleteError.Description, result.Errors.Single().Description);
+
+        userReadonlyRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Never);
+        userWriteRepositoryMock.Verify(x => x.UpdateAsync(It.IsAny<User>()), Times.Never);
+        unitOfWorkMock.Verify(x => x.SaveChangesAsync(), Times.Never);
+    }
+
+    [Fact]
     public async Task ShouldBeInvalidWhenUserIsNotFound_Test()
     {
         var command = new DeleteUserCommand { Id = 1 };
