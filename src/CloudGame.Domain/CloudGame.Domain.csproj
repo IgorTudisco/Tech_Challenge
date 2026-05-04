@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.6" />
   </ItemGroup>
 
 </Project>

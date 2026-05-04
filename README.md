@@ -1,23 +1,12 @@
 # Postgraduate Tech Challenge
 
-
-
-
-
-
-
-
 ## 👥 Team Members
 
-- Igor Andrade Tudisco – Backend / Architecture
-- Nome Sobrenome – Backend / Arquitetura
-- Nome Sobrenome – Backend / Arquitetura
-- Nome Sobrenome – Backend / Arquitetura
-- Nome Sobrenome – Backend / Arquitetura
-
-
-
-
+- Daniel - RM372640
+- Domingos Pereira - RM373016
+- Igor Andrade Tudisco - RM371517
+- Guilherme Paschoal - RM373362
+- Pedro Svicero - RM370700
 
 ## 🛠️ Gerenciamento de Dados (Entity Framework Core)
 Estes comandos devem ser executados via terminal (preferencialmente dentro da pasta CloudGame.API) para gerenciar o ciclo de vida das migrações no banco de dados Oracle.

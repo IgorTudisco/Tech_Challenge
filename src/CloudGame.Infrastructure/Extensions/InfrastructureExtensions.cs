@@ -1,4 +1,5 @@
-﻿using CloudGame.Domain.Interfaces;
+﻿using CloudGame.Domain.Entities;
+using CloudGame.Domain.Interfaces;
 using CloudGame.Domain.Interfaces.Security;
 using CloudGame.Infrastructure.Dapper;
 using CloudGame.Infrastructure.Dapper.Contracts;
@@ -23,6 +24,14 @@ namespace CloudGame.Infrastructure.Extensions
                 (
                     configuration.GetConnectionString("Default")
                 )
+                .UseAsyncSeeding(async (context, _, ct) =>
+                {
+                    if (await context.Set<User>().AnyAsync(s => s.IsAdmin, ct))
+                        return;                    
+
+                    await context.Set<User>().AddAsync(new User(configuration["AppDefaultUserAdmin:Name"], configuration["AppDefaultUserAdmin:Email"], configuration["AppDefaultUserAdmin:Password"], DateTime.Today.AddYears(-18), true), ct);
+                    await context.SaveChangesAsync(ct);
+                })
             );
 
             services.AddScoped<IDbConnection>(sp => new SqlConnection(configuration.GetConnectionString("Default")));

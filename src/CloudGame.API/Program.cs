@@ -3,9 +3,7 @@ using CloudGame.Application.Extensions;
 using CloudGame.Application.Handlers.UserHandler.Create;
 using CloudGame.Application.Settings;
 using CloudGame.Domain.Commom;
-using CloudGame.Domain.Interfaces.Security;
 using CloudGame.Infrastructure.EntityFramework;
-using CloudGame.Infrastructure.EntityFramework.Seeder;
 using CloudGame.Infrastructure.Extensions;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -13,106 +11,137 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using Serilog;
 using System.Data;
 using System.Text;
 
-var builder = WebApplication.CreateBuilder(args);
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
-builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddValidatorsFromAssemblyContaining<CreateUserCommandValidator>();
-
-builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
+try
 {
-    options.InvalidModelStateResponseFactory = context =>
+    Log.Information("Starting up the application...");
+
+    var builder = WebApplication.CreateBuilder(args);
+
+    builder.Host.UseSerilog((hostingContext, configuration) =>
     {
-        var errors = context.ModelState
-            .SelectMany(s => s.Value.Errors
-            .Select(v => new Error(s.Key, v.ErrorMessage)))
-            .ToList();
+        configuration
+            .ReadFrom.Configuration(hostingContext.Configuration);
+    });
 
-        return new BadRequestObjectResult(Result.Failure(errors));
-    };
-});
+    builder.Services.AddHealthChecks();
 
-builder.Services.AddOpenApi();
+    builder.Services.AddFluentValidationAutoValidation();
+    builder.Services.AddValidatorsFromAssemblyContaining<CreateUserCommandValidator>();
 
-builder.Services
-    .AddApplicationHandlers()
-    .AddInfrastructureServices(builder.Configuration);
+    builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
+    {
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            var errors = context.ModelState
+                .SelectMany(s => s.Value!.Errors
+                .Select(v => new Error(s.Key, v.ErrorMessage)))
+                .ToList();
 
-var jwtSettingsSection = builder.Configuration.GetRequiredSection("JwtSettings");
-builder.Services.Configure<JwtSettings>(jwtSettingsSection);
+            return new BadRequestObjectResult(Result.Failure(errors));
+        };
+    });
 
-var encriptKey = jwtSettingsSection.GetValue<string>("EncriptKey")!;
-var key = Encoding.ASCII.GetBytes(encriptKey);
-builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
+    builder.Services.AddOpenApi();
+
+    builder.Services
+        .AddApplicationHandlers()
+        .AddInfrastructureServices(builder.Configuration);
+
+    var jwtSettingsSection = builder.Configuration.GetRequiredSection("JwtSettings");
+    builder.Services.Configure<JwtSettings>(jwtSettingsSection);
+
+    var encriptKey = jwtSettingsSection.GetValue<string>("EncriptKey")!;
+    var key = Encoding.ASCII.GetBytes(encriptKey);
+    builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+                .AddJwtBearer(x =>
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+                    x.RequireHttpsMetadata = false;
+                    x.SaveToken = true;
+                    x.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
 
 
-builder.Services.AddExceptionHandler<CloudGameExceptionHandler>();
+    builder.Services.AddExceptionHandler<CloudGameExceptionHandler>();
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen(options =>
     {
-        Title = "TC - Fiap Cloud Game API",
-        Version = "v1"
+        options.SwaggerDoc("v1", new OpenApiInfo
+        {
+            Title = "TC - Fiap Cloud Game API",
+            Version = "v1"
+        });
+
+        options.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            Description = "Enter JWT token like: Bearer {your token}",
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.Http,
+            Scheme = "Bearer",
+            BearerFormat = "JWT"
+        });
+
+        options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+        {
+            [new OpenApiSecuritySchemeReference("bearer", document)] = []
+        });
     });
 
-    options.AddSecurityDefinition("bearer", new OpenApiSecurityScheme
+    var app = builder.Build();
+
+    Log.Information("The application has been built, and star the pipeline setup has started.");
+
+    await using (var scope = app.Services.CreateAsyncScope())
+    await using (var appDbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>())
     {
-        Name = "Authorization",
-        Description = "Enter JWT token like: Bearer {your token}",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.Http,
-        Scheme = "Bearer",
-        BearerFormat = "JWT"
-    });
+        await appDbContext.Database.EnsureCreatedAsync();
+    }    
 
-    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+    if (app.Environment.IsDevelopment())
     {
-        [new OpenApiSecuritySchemeReference("bearer", document)] = []
-    });
-});
+        app.MapOpenApi();
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
 
-var app = builder.Build();
+    app.UseHttpsRedirection();
 
-using (var scope = app.Services.CreateScope())
-{
-    var appDbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
+    app.UseAuthorization();
 
-    await DatabaseSeeder.SeedAsync(appDbContext, passwordHasher);
+    app.MapControllers();
+
+    app.MapHealthChecks("/health");
+
+    Log.Information("Pipeline successfully configured and application initialized...");
+
+    app.Run();
 }
-
-if (app.Environment.IsDevelopment())
+catch (Exception ex)
 {
-    app.MapOpenApi();
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    Log.Fatal(ex, "Application failed to start");
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+finally
+{
+    Log.Information("Shutting down the application...");
+    Log.CloseAndFlush();
+}
